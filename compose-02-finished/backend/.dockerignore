@@ -1,0 +1,4 @@
+node_modules
+Dockerfile
+.git
+# don't insert those in the container

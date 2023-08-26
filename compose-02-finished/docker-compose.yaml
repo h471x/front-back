@@ -1,0 +1,45 @@
+version: "3.8"
+services:
+  mongodb:
+    image: 'mongo' # use the service name or container name
+    volumes: 
+      - data:/data/db # this is a persistent volume inside the container
+    # environment: 
+    #   MONGO_INITDB_ROOT_USERNAME: max
+    #   MONGO_INITDB_ROOT_PASSWORD: secret
+      # - MONGO_INITDB_ROOT_USERNAME=max
+    env_file: 
+      - ./env/mongo.env
+    # if there is no network here, docker give a default network 
+    # but this image will be in the same network as the others
+  backend:
+    build: ./backend
+    # build:
+    #   context: ./backend
+    #   dockerfile: Dockerfile
+    #   args:
+    #     some-arg: 1
+    ports:
+      - '80:80'
+    volumes: 
+      - logs:/app/logs # persistent volume inside container (no '/')
+      - ./backend:/app # mount volume or bind mode
+      - /app/node_modules #
+    env_file: 
+      - ./env/backend.env
+    depends_on:
+      - mongodb
+  frontend:
+    build: ./frontend
+    ports: 
+      - '3000:3000'
+    volumes: 
+      - ./frontend/src:/app/src
+    stdin_open: true
+    tty: true
+    depends_on: 
+      - backend
+
+volumes: 
+  data:
+  logs:
