@@ -1,0 +1,17 @@
+name: test
+
+on:
+  push:
+    branches:
+      - main  # You can specify the branch you want to trigger this action on
+
+jobs:
+  echo-test:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v2
+
+      - name: Echo "test"
+        run: echo "test"
